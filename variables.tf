@@ -36,3 +36,10 @@ variable "enable_monitoreo" {
 variable "ingress_port_list" {
   description = "lista de puertos de ingress"
 }
+
+variable "access_key" {
+  
+}
+variable "secret_key" {
+  
+}
