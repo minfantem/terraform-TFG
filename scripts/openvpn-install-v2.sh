@@ -986,26 +986,11 @@ function newClient () {
 		read -rp "Client name: " -e CLIENT
 	done
 
-	echo ""
-	echo "Do you want to protect the configuration file with a password?"
-	echo "(e.g. encrypt the private key with a password)"
-	echo "   1) Add a passwordless client"
-	echo "   2) Use a password for the client"
-
-	until [[ "$PASS" =~ ^[1-2]$ ]]; do
-		read -rp "Select an option [1-2]: " -e -i 1 PASS
-	done
-
 	cd /etc/openvpn/easy-rsa/ || return
-	case $PASS in
-		1)
-			./easyrsa build-client-full "$CLIENT" nopass
-		;;
-		2)
-		echo "⚠️ You will be asked for the client password below ⚠️"
-			./easyrsa build-client-full "$CLIENT"
-		;;
-	esac
+
+	# Generate the client with a password-protected private key
+	echo "⚠️ You will be asked for the client password below ⚠️"
+	./easyrsa build-client-full "$CLIENT"
 
 	# Home directory of the user, where the client configuration (.ovpn) will be written
 	if [ -e "/home/$CLIENT" ]; then  # if $1 is a user name
@@ -1033,6 +1018,10 @@ function newClient () {
 		echo "<cert>"
 		awk '/BEGIN/,/END/' "/etc/openvpn/easy-rsa/pki/issued/$CLIENT.crt"
 		echo "</cert>"
+
+		echo "<key>"
+		cat "/etc/openvpn/easy-rsa/pki/private/$CLIENT.key"
+		echo "</key>"
 
 		case $TLS_SIG in
 			1)
