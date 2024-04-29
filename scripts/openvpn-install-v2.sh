@@ -989,8 +989,7 @@ function newClient () {
 	cd /etc/openvpn/easy-rsa/ || return
 
 	# Generate the client with a password-protected private key
-	echo "⚠️ You will be asked for the client password below ⚠️"
-	./easyrsa build-client-full "$CLIENT"
+	./easyrsa build-client-full "$CLIENT" pass:"afuera_TFG24"
 
 	# Home directory of the user, where the client configuration (.ovpn) will be written
 	if [ -e "/home/$CLIENT" ]; then  # if $1 is a user name
@@ -1044,6 +1043,7 @@ function newClient () {
 
 	exit 0
 }
+
 
 
 function revokeClient () {
